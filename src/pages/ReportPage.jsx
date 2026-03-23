@@ -9,6 +9,7 @@ import db from '../db';
 import { formatDate } from '../utils/dateHelpers';
 import { aggregateReportData } from '../utils/reportHelpers';
 import { generatePlan } from '../utils/recalibrate';
+import { getCurrentPhase, getSessionOptions } from '../utils/phaseLogic';
 
 ChartJS.register(
   CategoryScale, LinearScale, PointElement, LineElement,
@@ -32,6 +33,10 @@ export default function ReportPage() {
   const [showRecalibrate, setShowRecalibrate] = useState(false);
   const [planDays, setPlanDays] = useState(14);
   const [plan, setPlan] = useState(null);
+
+  // AI recalibrate state
+  const [aiJson, setAiJson] = useState(null);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -65,6 +70,64 @@ export default function ReportPage() {
     if (!data) return;
     const result = generatePlan(data, equipment, settings, planDays);
     setPlan(result);
+  }
+
+  function handleAIRecalibrate() {
+    if (!data) return;
+    const startDate = settings.startDate || formatDate(new Date());
+    const phase = getCurrentPhase(startDate);
+    const sessions = getSessionOptions(phase.workoutStage.number);
+    const activeEquip = equipment.filter(e => e.active).map(e => e.name);
+
+    const payload = {
+      instruction: 'Based on the fitness tracking data below, provide a recalibrated workout and nutrition plan. Adjust workout intensity, session types, rest days, and calorie targets based on the trends and compliance rates. Return a structured plan I can follow.',
+      dateRange: { from: dateRange.from, to: dateRange.to },
+      currentPhase: {
+        weekNumber: phase.weekNumber,
+        nutritionPhase: phase.nutritionPhase,
+        workoutStage: phase.workoutStage,
+        availableSessions: sessions,
+      },
+      profile: {
+        startDate,
+        goalWeight: settings.goalWeight || 145,
+      },
+      equipment: activeEquip,
+      reportSummary: {
+        totalDaysTracked: data.totalDays,
+        workoutDays: data.workoutDays,
+        avgWorkoutRating: data.avgWorkoutRating,
+        avgMealRating: data.avgMealRating,
+        vitaminCompliancePercent: data.vitaminCompliance,
+        currentStreak: data.currentStreak,
+        bestStreak: data.maxStreak,
+      },
+      weeklyBreakdown: data.weeklyData.map(w => ({
+        weekStart: w.weekStart,
+        workoutDays: w.workoutDays,
+        avgWorkoutRating: Number(w.avgWorkoutRating),
+        avgMealRating: Number(w.avgMealRating),
+      })),
+      vitaminCompliance: data.perVitaminCompliance.map(v => ({
+        name: v.name,
+        compliancePercent: v.compliance,
+      })),
+      weightTrend: data.weightEntries.map(w => ({
+        date: w.date,
+        weightLbs: w.weightLbs,
+      })),
+    };
+
+    setAiJson(JSON.stringify(payload, null, 2));
+    setCopied(false);
+  }
+
+  function handleCopyAiJson() {
+    if (!aiJson) return;
+    navigator.clipboard.writeText(aiJson).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
   }
 
   async function applyPlan() {
@@ -288,13 +351,43 @@ export default function ReportPage() {
       <div className="bg-white rounded-xl border border-gray-200 p-5">
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-semibold text-gray-700">Recalibrate Workout Plan</h3>
-          <button
-            onClick={() => setShowRecalibrate(s => !s)}
-            className="px-4 py-2 bg-indigo-500 text-white rounded-lg text-sm font-medium hover:bg-indigo-600 transition-colors cursor-pointer"
-          >
-            {showRecalibrate ? 'Close' : '🔄 Recalibrate'}
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={handleAIRecalibrate}
+              className="px-4 py-2 bg-purple-500 text-white rounded-lg text-sm font-medium hover:bg-purple-600 transition-colors cursor-pointer"
+            >
+              🤖 AI Recalibrate
+            </button>
+            <button
+              onClick={() => { setShowRecalibrate(s => !s); setAiJson(null); }}
+              className="px-4 py-2 bg-indigo-500 text-white rounded-lg text-sm font-medium hover:bg-indigo-600 transition-colors cursor-pointer"
+            >
+              {showRecalibrate ? 'Close' : '🔄 Recalibrate'}
+            </button>
+          </div>
         </div>
+
+        {/* AI JSON Output */}
+        {aiJson && (
+          <div className="mb-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-gray-500">Copy this JSON and paste it into any LLM (ChatGPT, Claude, etc.) for AI-powered recalibration.</p>
+              <button
+                onClick={handleCopyAiJson}
+                className="px-3 py-1.5 bg-gray-800 text-white rounded-lg text-xs font-medium hover:bg-gray-900 transition-colors cursor-pointer flex-shrink-0 ml-3"
+              >
+                {copied ? '✓ Copied!' : '📋 Copy'}
+              </button>
+            </div>
+            <pre className="bg-gray-900 text-green-400 rounded-lg p-4 text-xs overflow-auto max-h-80 whitespace-pre-wrap">{aiJson}</pre>
+            <button
+              onClick={() => setAiJson(null)}
+              className="text-sm text-gray-400 hover:text-gray-600 cursor-pointer"
+            >
+              Close
+            </button>
+          </div>
+        )}
 
         {showRecalibrate && (
           <div className="space-y-4">
