@@ -1,0 +1,426 @@
+{
+  "meta": {
+    "created": "2026-03-22",
+    "purpose": "Fitness and nutrition plan data for daily tracker app",
+    "owner": "Feng",
+    "version": "1.0"
+  },
+
+  "profile": {
+    "age": 38,
+    "gender": "male",
+    "height_ft": "5'7\"",
+    "current_weight_lbs": 170,
+    "goal_weight_lbs": 145,
+    "goal_weight_stretch_lbs": 145,
+    "goal_weight_primary_lbs": 150,
+    "starting_weight_lbs": 170,
+    "weight_6mo_ago_lbs": 158,
+    "lifestyle": "work from home, sedentary 6+ months",
+    "allergies": ["soy (mild)"]
+  },
+
+  "timeline": {
+    "total_duration_months": 12,
+    "phase_1": {
+      "label": "Aggressive Cut",
+      "weeks": "1-8",
+      "weight_target_lbs": 158,
+      "daily_calories": 1675,
+      "calorie_range": [1650, 1700],
+      "notes": "Do not go below 1600 kcal. ~1lb/week loss target."
+    },
+    "phase_2": {
+      "label": "Steady Cut",
+      "weeks": "9-36",
+      "weight_target_lbs": 148,
+      "daily_calories": 1825,
+      "calorie_range": [1800, 1850],
+      "notes": "Recalculate TDEE when hitting 158 lbs. Metabolism will have adapted."
+    },
+    "phase_3": {
+      "label": "Maintenance",
+      "months": "10-12+",
+      "weight_target_lbs": 148,
+      "daily_calories": 2050,
+      "calorie_range": [2000, 2100],
+      "notes": "Refeed gradually. Do not jump straight to full TDEE."
+    }
+  },
+
+  "nutrition": {
+    "tdee_estimated_kcal": 2150,
+    "intermittent_fasting": {
+      "weekday_window": "11:00am - 7:00pm",
+      "weekday_hours": 8,
+      "weekend_window": "11:00am - 10:00pm",
+      "weekend_hours": 11,
+      "weekend_target": "Aim for 8:30-9:00pm close. 10:00pm is ceiling, not norm.",
+      "hard_close_after": "7:00pm weekdays"
+    },
+    "macros_phase_1": {
+      "protein_g": { "min": 155, "max": 170, "note": "~1g per lb of goal body weight" },
+      "carbs_g": { "min": 130, "max": 150 },
+      "fat_g": { "min": 50, "max": 60 }
+    },
+    "meal_schedule": [
+      {
+        "time": "11:00am",
+        "label": "Break fast — Protein Meal #1",
+        "protein_target_g": 45,
+        "options": ["eggs", "Greek yogurt", "cottage cheese", "protein shake"],
+        "notes": "First meal of the day. Take all morning supplements here."
+      },
+      {
+        "time": "1:15-1:30pm",
+        "label": "Post-Workout Protein Shake (Lunch)",
+        "protein_target_g": 45,
+        "options": ["whey isolate shake", "smoothie with protein powder"],
+        "notes": "Within 30 min post-workout. Counts as lunch."
+      },
+      {
+        "time": "5:00-6:00pm",
+        "label": "Dinner",
+        "protein_target_g": 55,
+        "options": ["family dinner — wife cooks"],
+        "notes": "Portion awareness. Eat protein first on the plate. Cannot moderate heavily."
+      }
+    ],
+    "meal_protein_breakdown": {
+      "breakfast_g": 45,
+      "lunch_shake_g": 45,
+      "dinner_g": 55,
+      "total_target_g": 155,
+      "gap_filled_by": "Incidental protein in food throughout meals"
+    },
+    "weekend_guardrails": [
+      "Keep eating window loosely (no food before 10am, stop by 10pm max)",
+      "At least one meal per day must have an identifiable protein source",
+      "No calorie counting required on weekends",
+      "Avoid alcohol calories and late-night snacking"
+    ]
+  },
+
+  "supplements": [
+    {
+      "name": "Seeking Health Multivitamin One",
+      "type": "multivitamin",
+      "dose": "1 capsule",
+      "frequency": "daily",
+      "timing": "11:00am with food",
+      "notes": "Take with fat-containing meal. Do not take within 6 hours of bedtime. B vitamins may disrupt sleep.",
+      "soy_free": true,
+      "one_capsule_serving": true
+    },
+    {
+      "name": "Nature's Bounty Vitamin D3 + K2",
+      "type": "vitamin",
+      "dose": "1 capsule (4000 IU D3 + 100mcg K2)",
+      "frequency": "daily",
+      "timing": "11:00am with food",
+      "notes": "Fat-soluble — must be taken with a meal. D3 + K2 work synergistically.",
+      "soy_free": true
+    },
+    {
+      "name": "Nordic Naturals Ultimate Omega",
+      "type": "omega-3",
+      "dose": "2 soft gels (1280mg EPA+DHA)",
+      "frequency": "daily",
+      "timing": "11:00am with food",
+      "notes": "Fat-soluble. Lemon flavored to minimize fish burps. Third-party tested.",
+      "soy_free": true
+    },
+    {
+      "name": "Creatine Monohydrate",
+      "type": "performance",
+      "dose": "5g",
+      "frequency": "daily",
+      "timing": "11:00am — consistency over timing",
+      "notes": "Expect 2-4 lbs water weight gain in weeks 1-2. Skip loading phase. Muscle-sparing during cut.",
+      "soy_free": true
+    },
+    {
+      "name": "Nutricost Magnesium Glycinate",
+      "type": "mineral",
+      "dose_week_1": "2 capsules",
+      "dose_week_2_plus": "3 capsules",
+      "frequency": "daily",
+      "timing": "Before bed",
+      "notes": "Ramp from 2 to 3 caps after week 1 to avoid GI upset. Promotes sleep and muscle recovery.",
+      "soy_free": true,
+      "elemental_mg_target": "300-400mg"
+    }
+  ],
+
+  "daily_schedule": {
+    "weekday": [
+      { "time": "11:00am", "action": "Break fast — Protein Meal #1", "category": "nutrition" },
+      { "time": "11:00am", "action": "Take Multivitamin (Seeking Health)", "category": "supplement" },
+      { "time": "11:00am", "action": "Take D3 + K2 (Nature's Bounty)", "category": "supplement" },
+      { "time": "11:00am", "action": "Take Omega-3 (Nordic Naturals)", "category": "supplement" },
+      { "time": "11:00am", "action": "Take Creatine 5g", "category": "supplement" },
+      { "time": "12:30-1:15pm", "action": "Workout", "category": "workout" },
+      { "time": "1:15-1:30pm", "action": "Post-workout protein shake (lunch)", "category": "nutrition" },
+      { "time": "5:00-6:00pm", "action": "Dinner", "category": "nutrition" },
+      { "time": "7:00pm", "action": "Eating window closes", "category": "nutrition" },
+      { "time": "Before bed", "action": "Take Magnesium Glycinate", "category": "supplement" }
+    ],
+    "weekend": [
+      { "time": "11:00am", "action": "Break fast (loosely)", "category": "nutrition" },
+      { "time": "11:00am", "action": "Take all morning supplements", "category": "supplement" },
+      { "time": "Before bed", "action": "Take Magnesium Glycinate", "category": "supplement" },
+      { "time": "10:00pm", "action": "Eating window closes (hard ceiling)", "category": "nutrition" }
+    ]
+  },
+
+  "daily_checklist_items": [
+    { "id": "vitamins", "label": "Vitamins & Supplements (morning)", "category": "supplement", "frequency": "daily" },
+    { "id": "magnesium", "label": "Magnesium Glycinate (bedtime)", "category": "supplement", "frequency": "daily" },
+    { "id": "workout", "label": "Workout completed", "category": "workout", "frequency": "weekday", "target_days_per_week": 3, "stretch_days_per_week": 5 },
+    { "id": "eating_window", "label": "Eating window maintained", "category": "nutrition", "frequency": "daily" },
+    { "id": "protein_target", "label": "Protein target hit (155-170g)", "category": "nutrition", "frequency": "daily" },
+    { "id": "calories", "label": "Calories within target", "category": "nutrition", "frequency": "daily" },
+    { "id": "weight", "label": "Weight logged", "category": "tracking", "frequency": "weekly", "recommended_day": "Monday morning, fasted" }
+  ],
+
+  "workout_plan": {
+    "equipment": [
+      "Concept2 Rowing Machine",
+      "Adjustable angle bench (with leg/lower body weight attachment)",
+      "Free weights — up to 50 lbs per side",
+      "Large gym mat"
+    ],
+    "session_duration_min": { "min": 30, "max": 45 },
+    "primary_workout_window": "12:30-1:15pm",
+    "backup_workout_window": "3:00-4:00pm",
+    "training_days_floor": 3,
+    "training_days_ceiling": 5,
+    "no_training_days": ["Saturday (optional)", "Sunday"],
+
+    "stage_1": {
+      "label": "Foundation",
+      "weeks": "1-4",
+      "goal": "Re-establish movement patterns, build rowing base, zero injury risk",
+      "days_per_week": 3,
+      "split": "Full body each session",
+      "recommended_schedule": "Mon / Wed / Fri",
+      "session_structure": {
+        "warm_up": { "type": "Rowing", "duration_min": 5, "spm": "18-20", "intensity": "easy" },
+        "strength_circuit": { "rounds": 3, "duration_min": 25 },
+        "cool_down": { "type": "Mat stretch", "duration_min": 5 }
+      },
+      "sessions": {
+        "day_a": {
+          "label": "Push + Row",
+          "exercises": [
+            { "name": "Rowing warm-up", "type": "cardio", "duration_min": 5, "spm": "18-20", "intensity": "easy" },
+            { "name": "Dumbbell Bench Press", "sets": 3, "reps": 10, "notes": "Adjustable bench, moderate weight" },
+            { "name": "Dumbbell Shoulder Press", "sets": 3, "reps": 10, "notes": "Seated on bench" },
+            { "name": "Dumbbell Lateral Raise", "sets": 3, "reps": 12, "notes": "Light weight, full range of motion" },
+            { "name": "Push-ups", "sets": 3, "reps": "max", "notes": "Mat, controlled tempo" },
+            { "name": "Rowing finisher", "type": "cardio", "duration_min": 5, "spm": "22", "intensity": "moderate" }
+          ]
+        },
+        "day_b": {
+          "label": "Pull + Row",
+          "exercises": [
+            { "name": "Rowing warm-up", "type": "cardio", "duration_min": 5, "spm": "18-20", "intensity": "easy" },
+            { "name": "Dumbbell Romanian Deadlift", "sets": 3, "reps": 10, "notes": "Slow eccentric, feel the hamstring" },
+            { "name": "Dumbbell Bent-over Row", "sets": 3, "reps": 10, "notes": "Brace core, do not swing" },
+            { "name": "Dumbbell Bicep Curl", "sets": 3, "reps": 12, "notes": "Controlled, no momentum" },
+            { "name": "Renegade Row", "sets": 3, "reps": "8 per side", "notes": "Mat, core stability" },
+            { "name": "Rowing finisher", "type": "cardio", "duration_min": 5, "spm": "22", "intensity": "moderate" }
+          ]
+        },
+        "day_c": {
+          "label": "Legs + Core + Row",
+          "exercises": [
+            { "name": "Rowing warm-up", "type": "cardio", "duration_min": 5, "spm": "18-20", "intensity": "easy" },
+            { "name": "Goblet Squat", "sets": 3, "reps": 12, "notes": "Single dumbbell, sit into it" },
+            { "name": "Bench Step-up", "sets": 3, "reps": "10 per side", "notes": "Use adjustable bench flat" },
+            { "name": "Leg Press on Bench", "sets": 3, "reps": 12, "notes": "Weight attachment on bench" },
+            { "name": "Plank", "sets": 3, "duration_sec": "30-45", "notes": "Mat" },
+            { "name": "Dead Bug", "sets": 3, "reps": "10 per side", "notes": "Mat, core control" },
+            { "name": "Rowing finisher", "type": "cardio", "duration_min": 5, "spm": "24", "intensity": "push pace" }
+          ]
+        }
+      }
+    },
+
+    "stage_2": {
+      "label": "Build",
+      "weeks": "5-12",
+      "goal": "Increase rowing intensity, progressive overload, add 4th training day",
+      "days_per_week": 4,
+      "split": "Push / Pull / Legs / Cardio",
+      "recommended_schedule": "Mon / Tue / Thu / Sat",
+      "changes_from_stage_1": [
+        "Rowing finishers become interval-based (1 min hard / 1 min easy)",
+        "Rep ranges drop to 8-10 with heavier weight",
+        "4th day added — dedicated rowing/cardio day",
+        "Rest periods tighten from 90 sec to 60 sec between sets"
+      ],
+      "sessions": {
+        "day_a": {
+          "label": "Push — Heavy",
+          "exercises": [
+            { "name": "Rowing warm-up", "type": "cardio", "duration_min": 4, "intensity": "build to moderate" },
+            { "name": "Incline DB Bench Press", "sets": 4, "reps": 8, "notes": "Raise bench angle 30-45 degrees" },
+            { "name": "DB Shoulder Press", "sets": 4, "reps": 8, "notes": "Standing, stricter form" },
+            { "name": "Lateral Raise", "sets": 3, "reps": 15, "notes": "Superset with shoulder press" },
+            { "name": "Tricep Kickback", "sets": 3, "reps": 12, "notes": "Full extension" },
+            { "name": "Push-up to failure", "sets": 1, "reps": "max", "notes": "Burnout set" }
+          ]
+        },
+        "day_b": {
+          "label": "Pull — Heavy",
+          "exercises": [
+            { "name": "Rowing warm-up", "type": "cardio", "duration_min": 4, "intensity": "build pace" },
+            { "name": "DB Romanian Deadlift", "sets": 4, "reps": 8, "notes": "Add weight from Stage 1" },
+            { "name": "DB Bent-over Row", "sets": 4, "reps": 8, "notes": "Heavier, stricter form" },
+            { "name": "DB Hammer Curl", "sets": 3, "reps": 12, "notes": "Neutral grip" },
+            { "name": "DB Shrug", "sets": 3, "reps": 15, "notes": "Full trap engagement" },
+            { "name": "Renegade Row", "sets": 3, "reps": "10 per side", "notes": "Heavier DB" }
+          ]
+        },
+        "day_c": {
+          "label": "Legs — Heavy",
+          "exercises": [
+            { "name": "Rowing warm-up", "type": "cardio", "duration_min": 4 },
+            { "name": "Goblet Squat", "sets": 4, "reps": 10, "notes": "Heavier DB than Stage 1" },
+            { "name": "Bulgarian Split Squat", "sets": 3, "reps": "8 per side", "notes": "Rear foot on bench — high difficulty, high reward" },
+            { "name": "Bench Leg Press", "sets": 4, "reps": 12, "notes": "Add weight plates" },
+            { "name": "Romanian Deadlift", "sets": 3, "reps": 10, "notes": "Light-moderate, hamstring focus" },
+            { "name": "Plank variations", "sets": 3, "duration_sec": 45, "notes": "Side plank, standard plank, RKC plank" }
+          ]
+        },
+        "day_d": {
+          "label": "Rowing Intervals — Cardio",
+          "exercises": [
+            { "name": "Easy warm-up row", "type": "cardio", "duration_min": 3, "spm": "18", "intensity": "easy" },
+            { "name": "Interval set", "type": "cardio", "duration_min": 20, "rounds": 10, "work_duration_sec": 60, "rest_duration_sec": 60, "work_spm": "26-28", "rest_intensity": "easy" },
+            { "name": "Cool-down row", "type": "cardio", "duration_min": 5, "intensity": "easy, breath control" },
+            { "name": "Mat stretch", "duration_min": 5, "focus": ["hip flexors", "hamstrings", "thoracic spine"] }
+          ]
+        }
+      }
+    },
+
+    "stage_3": {
+      "label": "Intensity",
+      "weeks": "13+",
+      "goal": "Peak fat loss, 5th training day, heavier compound lifts, longer rowing intervals",
+      "days_per_week": 5,
+      "split": "Upper / Lower / Push / Pull / Cardio",
+      "recommended_schedule": "Mon / Tue / Wed / Thu / Fri",
+      "changes_from_stage_2": [
+        "5th training day added",
+        "Rowing intervals extend to 25-30 min",
+        "Supersets introduced throughout to increase caloric burn",
+        "Weight targets approach 50lb/side ceiling on key lifts",
+        "New equipment to be introduced and plan rebuilt at Week 12 review"
+      ],
+      "day_preview": [
+        { "day": "Monday", "focus": "Upper body compound", "notes": "Heavier DB press, row combos" },
+        { "day": "Tuesday", "focus": "Lower body + core", "notes": "Heavy goblet, split squats, weighted core" },
+        { "day": "Wednesday", "focus": "Push superset circuit", "notes": "Back-to-back sets, 45 sec rest" },
+        { "day": "Thursday", "focus": "Pull superset circuit", "notes": "Row + curl + shrug supersets" },
+        { "day": "Friday", "focus": "Rowing — long intervals", "notes": "30 min interval work, 500m repeats" },
+        { "day": "Saturday", "focus": "Off", "notes": "Optional walk only" },
+        { "day": "Sunday", "focus": "Off", "notes": "Rest" }
+      ],
+      "note": "Full Stage 3 session breakdown to be built at Week 12 review. Reassess equipment, weight progress, and weak points at that time."
+    },
+
+    "progression_rules": [
+      "Add weight only when all reps are completed with clean form",
+      "Track weights every session",
+      "Never skip the rowing finisher — it is the primary fat loss driver",
+      "If you miss a day, do not double up — resume next scheduled session",
+      "Soreness is acceptable, sharp joint pain is not — stop immediately if joint pain occurs"
+    ],
+
+    "optional_daily_addition": {
+      "label": "Post-dinner walk",
+      "duration_min": "10-15",
+      "timing": "After dinner",
+      "benefit": "Blunts post-dinner insulin spike, aids digestion, adds weekly caloric expenditure",
+      "recovery_cost": "none"
+    }
+  },
+
+  "tracker_app_spec": {
+    "platform": "Web app — browser, works on phone and desktop",
+    "daily_tracking_items": [
+      {
+        "id": "vitamins_morning",
+        "label": "Morning Supplements",
+        "description": "Multivitamin + D3/K2 + Omega-3 + Creatine",
+        "type": "checkbox",
+        "frequency": "daily",
+        "time_target": "11:00am"
+      },
+      {
+        "id": "magnesium_night",
+        "label": "Magnesium Glycinate",
+        "description": "2 caps week 1 / 3 caps week 2+, before bed",
+        "type": "checkbox",
+        "frequency": "daily",
+        "time_target": "before bed"
+      },
+      {
+        "id": "workout",
+        "label": "Workout Completed",
+        "description": "Log which session was completed (Day A / B / C / D / Rest)",
+        "type": "checkbox_with_options",
+        "options": ["Day A — Push", "Day B — Pull", "Day C — Legs", "Day D — Cardio", "Rest Day"],
+        "frequency": "daily",
+        "target_days_per_week": 3,
+        "stretch_days_per_week": 5
+      },
+      {
+        "id": "eating_window",
+        "label": "Eating Window Maintained",
+        "description": "Weekdays: 11am-7pm | Weekends: 11am-10pm max",
+        "type": "checkbox",
+        "frequency": "daily"
+      },
+      {
+        "id": "calories",
+        "label": "Calories Within Target",
+        "description": "Phase 1: 1650-1700 kcal | Phase 2: 1800-1850 kcal",
+        "type": "checkbox",
+        "frequency": "daily"
+      }
+    ],
+    "weekly_tracking_items": [
+      {
+        "id": "weight",
+        "label": "Weight",
+        "description": "Log Monday morning, fasted, same conditions each week",
+        "type": "number",
+        "unit": "lbs",
+        "frequency": "weekly",
+        "recommended_day": "Monday",
+        "recommended_time": "morning fasted"
+      }
+    ],
+    "suggested_features": [
+      "Weekly streak counter per checklist item",
+      "Weight chart with goal line overlay (170 → 145 lbs over 12 months)",
+      "Current phase indicator (Phase 1 / 2 / 3) based on start date",
+      "Weekly workout count vs target (3 floor / 5 ceiling)",
+      "Current workout stage indicator (Stage 1 / 2 / 3) based on week number",
+      "Monthly summary view",
+      "Simple win/loss day indicator (green = all items checked)"
+    ],
+    "phase_logic": {
+      "phase_1_weeks": "1-8",
+      "phase_2_weeks": "9-36",
+      "phase_3_weeks": "37+",
+      "workout_stage_1_weeks": "1-4",
+      "workout_stage_2_weeks": "5-12",
+      "workout_stage_3_weeks": "13+"
+    }
+  }
+}
