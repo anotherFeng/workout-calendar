@@ -1,10 +1,12 @@
 ﻿import { Routes, Route, NavLink } from 'react-router-dom'
 import CalendarPage from './pages/CalendarPage'
+import WeeklySchedulePage from './pages/WeeklySchedulePage'
 import ReportPage from './pages/ReportPage'
 import SettingsPage from './pages/SettingsPage'
 
 const navItems = [
   { to: '/', label: 'Calendar', icon: '📅' },
+  { to: '/schedule', label: 'Schedule', icon: '🗓️' },
   { to: '/report', label: 'Report', icon: '📊' },
   { to: '/settings', label: 'Settings', icon: '⚙️' },
 ]
@@ -45,6 +47,7 @@ export default function App() {
       <main className="flex-1">
         <Routes>
           <Route path="/" element={<CalendarPage />} />
+          <Route path="/schedule" element={<WeeklySchedulePage />} />
           <Route path="/report" element={<ReportPage />} />
           <Route path="/settings" element={<SettingsPage />} />
         </Routes>
