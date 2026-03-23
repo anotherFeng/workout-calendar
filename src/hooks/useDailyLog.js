@@ -93,9 +93,9 @@ export function useMonthLogs(year, month) {
     const vitChecks = vitaminLogs.filter(vl => vl.date === dateStr && vl.checked);
 
     return {
-      workout: log?.workoutRating >= 4,
-      meal: log?.mealRating >= 4,
-      vitamins: activeVitaminCount > 0 && vitChecks.length >= activeVitaminCount,
+      workout: log?.workoutRating || 0,
+      meal: log?.mealRating || 0,
+      vitamins: activeVitaminCount > 0 ? vitChecks.length / activeVitaminCount : 0,
       hasData: !!log,
     };
   }, [logs, vitaminLogs, activeVitaminCount]);
