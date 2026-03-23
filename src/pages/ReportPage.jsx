@@ -37,6 +37,9 @@ export default function ReportPage() {
   // AI recalibrate state
   const [aiJson, setAiJson] = useState(null);
   const [copied, setCopied] = useState(false);
+  const [aiResponseText, setAiResponseText] = useState('');
+  const [aiImportError, setAiImportError] = useState('');
+  const [aiImportSuccess, setAiImportSuccess] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -80,7 +83,32 @@ export default function ReportPage() {
     const activeEquip = equipment.filter(e => e.active).map(e => e.name);
 
     const payload = {
-      instruction: 'Based on the fitness tracking data below, provide a recalibrated workout and nutrition plan. Adjust workout intensity, session types, rest days, and calorie targets based on the trends and compliance rates. Return a structured plan I can follow.',
+      instruction: 'Based on the fitness tracking data below, generate a recalibrated workout and nutrition plan. You MUST respond with ONLY a valid JSON object matching the responseSchema below — no markdown, no explanation, just raw JSON.',
+      responseSchema: {
+        _description: 'Your response must be a JSON object with this exact structure',
+        dailyPlan: [
+          {
+            date: 'YYYY-MM-DD (start from tomorrow, one entry per day)',
+            sessionType: 'e.g. "Day A — Push + Row", "Rest Day", etc.',
+            calorieTarget: 'number — daily calorie target',
+            proteinGrams: 'number — daily protein target in grams',
+            notes: 'string — brief coaching note for the day',
+          },
+        ],
+        adjustments: {
+          workoutsPerWeek: 'number — recommended workouts per week',
+          calorieTarget: 'number — overall daily calorie target',
+          proteinTarget: 'number — daily protein in grams',
+          reasoning: 'string — brief explanation of why you made these changes',
+        },
+        vitaminChanges: [
+          {
+            name: 'vitamin/supplement name',
+            action: '"keep" | "increase" | "decrease" | "stop"',
+            note: 'string — dosage or timing adjustment note',
+          },
+        ],
+      },
       dateRange: { from: dateRange.from, to: dateRange.to },
       currentPhase: {
         weekNumber: phase.weekNumber,
@@ -128,6 +156,53 @@ export default function ReportPage() {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     });
+  }
+
+  async function handleImportAiResponse() {
+    setAiImportError('');
+    setAiImportSuccess(false);
+    try {
+      // Strip markdown code fences if present
+      let cleaned = aiResponseText.trim();
+      if (cleaned.startsWith('```')) {
+        cleaned = cleaned.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '');
+      }
+      const response = JSON.parse(cleaned);
+
+      if (!response.dailyPlan || !Array.isArray(response.dailyPlan)) {
+        setAiImportError('Invalid response: missing "dailyPlan" array.');
+        return;
+      }
+
+      // Apply daily plan entries
+      for (const day of response.dailyPlan) {
+        if (!day.date) continue;
+        const existing = await db.dailyLogs.get(day.date);
+        if (!existing) {
+          await db.dailyLogs.put({
+            date: day.date,
+            workoutRating: null,
+            workoutSessionType: day.sessionType || 'Rest Day',
+            mealRating: null,
+            notes: `[AI Plan] ${day.notes || ''} | Cal: ${day.calorieTarget || '—'} | Protein: ${day.proteinGrams || '—'}g`,
+          });
+        } else {
+          // Update session type + notes for existing entries that have no workout rating yet
+          if (!existing.workoutRating) {
+            await db.dailyLogs.update(day.date, {
+              workoutSessionType: day.sessionType || existing.workoutSessionType,
+              notes: `[AI Plan] ${day.notes || ''} | Cal: ${day.calorieTarget || '—'} | Protein: ${day.proteinGrams || '—'}g`,
+            });
+          }
+        }
+      }
+
+      setAiImportSuccess(true);
+      setAiResponseText('');
+      setTimeout(() => setAiImportSuccess(false), 3000);
+    } catch (err) {
+      setAiImportError('Failed to parse JSON: ' + err.message);
+    }
   }
 
   async function applyPlan() {
@@ -380,12 +455,35 @@ export default function ReportPage() {
               </button>
             </div>
             <pre className="bg-gray-900 text-green-400 rounded-lg p-4 text-xs overflow-auto max-h-80 whitespace-pre-wrap">{aiJson}</pre>
-            <button
-              onClick={() => setAiJson(null)}
-              className="text-sm text-gray-400 hover:text-gray-600 cursor-pointer"
-            >
-              Close
-            </button>
+
+            {/* Import AI Response */}
+            <div className="border-t border-gray-200 pt-3 mt-3 space-y-2">
+              <p className="text-sm font-medium text-gray-700">2. Paste the LLM response JSON below to apply it:</p>
+              <textarea
+                value={aiResponseText}
+                onChange={e => { setAiResponseText(e.target.value); setAiImportError(''); }}
+                placeholder='Paste the AI response JSON here...'
+                rows={6}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-xs font-mono bg-gray-50 focus:ring-2 focus:ring-purple-300 focus:outline-none"
+              />
+              {aiImportError && <p className="text-sm text-red-500">{aiImportError}</p>}
+              {aiImportSuccess && <p className="text-sm text-green-600 font-medium">✓ AI plan applied to calendar!</p>}
+              <div className="flex gap-2">
+                <button
+                  onClick={handleImportAiResponse}
+                  disabled={!aiResponseText.trim()}
+                  className="px-4 py-2 bg-purple-500 text-white rounded-lg text-sm font-medium hover:bg-purple-600 transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  ✓ Apply AI Plan
+                </button>
+                <button
+                  onClick={() => setAiJson(null)}
+                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-300 transition-colors cursor-pointer"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
           </div>
         )}
 
