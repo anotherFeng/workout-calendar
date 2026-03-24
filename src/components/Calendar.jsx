@@ -90,7 +90,7 @@ function CheckIcon({ value, max, title, category }) {
     return (
       <span
         title={title}
-        className="text-[10px] sm:text-xs opacity-20 grayscale transition-opacity"
+        className="flex items-center gap-px text-[10px] sm:text-xs opacity-20 grayscale transition-opacity"
       >
         {icon}
       </span>
@@ -99,28 +99,29 @@ function CheckIcon({ value, max, title, category }) {
 
   const ratio = Math.min(value / max, 1);
   const isFull = ratio >= 1;
+  const pct = Math.round(ratio * 100);
 
   if (isFull) {
     return (
       <span
         title={`${title} ✓`}
-        className="text-[10px] sm:text-xs transition-opacity"
+        className="flex items-center gap-px text-[10px] sm:text-xs transition-opacity"
       >
-        {icon}
+        {icon}<span className="text-green-600 font-bold" style={{ fontSize: '8px', lineHeight: 1 }}>✓</span>
       </span>
     );
   }
 
-  // Partial: dim based on progress
+  // Partial: dim based on progress, show %
   const opacity = 0.3 + ratio * 0.5;
 
   return (
     <span
-      title={`${title}: ${max <= 1 ? Math.round(ratio * 100) + '%' : value + '/' + max}`}
-      className="text-[10px] sm:text-xs transition-opacity"
+      title={`${title}: ${pct}%`}
+      className="flex items-center gap-px text-[10px] sm:text-xs transition-opacity"
       style={{ opacity }}
     >
-      {icon}
+      {icon}<span className="text-gray-500 font-medium" style={{ fontSize: '7px', lineHeight: 1 }}>{pct}</span>
     </span>
   );
 }
