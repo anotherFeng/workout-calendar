@@ -355,7 +355,7 @@ export default function SessionsPage() {
   const { settings } = useSettings();
   const startDate = settings.startDate || new Date().toISOString().slice(0, 10);
   const phase = getCurrentPhase(startDate);
-  const currentStage = phase.workoutStage.number;
+  const currentStage = settings.stageOverride || phase.workoutStage.number;
 
   const [openStage, setOpenStage] = useState(currentStage);
   const [openSession, setOpenSession] = useState(null);

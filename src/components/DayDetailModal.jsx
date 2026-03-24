@@ -12,10 +12,13 @@ export default function DayDetailModal({ date, onClose }) {
   const { settings } = useSettings();
   const vitamins = useLiveQuery(() => db.vitamins.where('active').equals(1).sortBy('sortOrder'), []);
   const [weight, setWeight] = useState('');
+  const [saved, setSaved] = useState(false);
 
+  const stageOverride = settings.stageOverride || null;
   const phaseInfo = settings.startDate ? getCurrentPhase(settings.startDate) : null;
-  const sessionOptions = phaseInfo ? getSessionOptions(phaseInfo.workoutStage.number) : [
-    'Day A — Push', 'Day B — Pull', 'Day C — Legs', 'Day D — Cardio', 'Rest Day'
+  const activeStage = stageOverride || (phaseInfo ? phaseInfo.workoutStage.number : null);
+  const sessionOptions = activeStage ? getSessionOptions(activeStage) : [
+    { group: null, options: ['Day A — Push', 'Day B — Pull', 'Day C — Legs', 'Day D — Cardio', 'Rest Day'] }
   ];
 
   // Load weight for this date
@@ -79,9 +82,19 @@ export default function DayDetailModal({ date, onClose }) {
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
                 >
                   <option value="">Select session...</option>
-                  {sessionOptions.map(opt => (
-                    <option key={opt} value={opt}>{opt}</option>
-                  ))}
+                  {sessionOptions.map((group, gi) =>
+                    group.group ? (
+                      <optgroup key={gi} label={group.group}>
+                        {group.options.map(opt => (
+                          <option key={opt} value={opt}>{opt}</option>
+                        ))}
+                      </optgroup>
+                    ) : (
+                      group.options.map(opt => (
+                        <option key={opt} value={opt}>{opt}</option>
+                      ))
+                    )
+                  )}
                 </select>
               </div>
             </div>
@@ -145,6 +158,20 @@ export default function DayDetailModal({ date, onClose }) {
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-300"
             />
           </section>
+
+          {/* Save Button */}
+          <div className="pt-2 pb-1">
+            <button
+              onClick={() => { setSaved(true); setTimeout(() => setSaved(false), 1500); }}
+              className={`w-full py-3 rounded-xl text-sm font-semibold transition-colors cursor-pointer ${
+                saved
+                  ? 'bg-green-500 text-white'
+                  : 'bg-blue-500 text-white hover:bg-blue-600 active:bg-blue-700'
+              }`}
+            >
+              {saved ? '✓ Saved' : 'Done'}
+            </button>
+          </div>
         </div>
       </div>
     </div>

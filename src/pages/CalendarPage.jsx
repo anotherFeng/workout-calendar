@@ -14,6 +14,9 @@ export default function CalendarPage() {
   const { settings } = useSettings();
 
   const phaseInfo = settings.startDate ? getCurrentPhase(settings.startDate) : null;
+  const stageOverride = settings.stageOverride || null;
+  const activeStageNumber = stageOverride || (phaseInfo ? phaseInfo.workoutStage.number : null);
+  const stageLabels = { 1: 'Foundation', 2: 'Build', 3: 'Intensity' };
 
   const handlePrev = () => {
     if (month === 0) { setYear(y => y - 1); setMonth(11); }
@@ -37,7 +40,8 @@ export default function CalendarPage() {
             Phase {phaseInfo.nutritionPhase.number}: {phaseInfo.nutritionPhase.label}
           </span>
           <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-semibold">
-            Stage {phaseInfo.workoutStage.number}: {phaseInfo.workoutStage.label}
+            Stage {activeStageNumber}: {stageLabels[activeStageNumber] || phaseInfo.workoutStage.label}
+            {stageOverride ? ' (override)' : ''}
           </span>
           <span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-semibold">
             Week {phaseInfo.weekNumber}

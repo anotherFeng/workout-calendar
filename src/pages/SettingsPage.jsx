@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import db from '../db';
+import { getCurrentPhase } from '../utils/phaseLogic';
 
 export default function SettingsPage() {
   const vitamins = useLiveQuery(() => db.vitamins.orderBy('sortOrder').toArray()) || [];
@@ -10,6 +11,7 @@ export default function SettingsPage() {
   const [newEquipment, setNewEquipment] = useState('');
   const [startDate, setStartDate] = useState('');
   const [goalWeight, setGoalWeight] = useState('');
+  const [stageOverride, setStageOverride] = useState('');
   const [importStatus, setImportStatus] = useState('');
 
   useEffect(() => {
@@ -18,6 +20,8 @@ export default function SettingsPage() {
       const gw = await db.settings.get('goalWeight');
       if (sd) setStartDate(String(sd.value));
       if (gw) setGoalWeight(String(gw.value));
+      const so = await db.settings.get('stageOverride');
+      if (so) setStageOverride(String(so.value));
     }
     loadSettings();
   }, []);
@@ -59,6 +63,11 @@ export default function SettingsPage() {
   async function saveProfile() {
     if (startDate) await db.settings.put({ key: 'startDate', value: startDate });
     if (goalWeight) await db.settings.put({ key: 'goalWeight', value: parseFloat(goalWeight) });
+    if (stageOverride) {
+      await db.settings.put({ key: 'stageOverride', value: parseInt(stageOverride, 10) });
+    } else {
+      await db.settings.delete('stageOverride');
+    }
   }
 
   // Export all data
@@ -150,6 +159,24 @@ export default function SettingsPage() {
               onChange={e => setGoalWeight(e.target.value)}
               className="border border-gray-300 rounded-lg px-3 py-2 w-full text-sm"
             />
+          </div>
+          <div className="sm:col-span-2">
+            <label className="text-sm text-gray-500 block mb-1">Workout Stage Override</label>
+            <select
+              value={stageOverride}
+              onChange={e => setStageOverride(e.target.value)}
+              className="border border-gray-300 rounded-lg px-3 py-2 w-full text-sm"
+            >
+              <option value="">Auto (based on start date)</option>
+              <option value="1">Stage 1 — Foundation (Weeks 1–4)</option>
+              <option value="2">Stage 2 — Build (Weeks 5–12)</option>
+              <option value="3">Stage 3 — Intensity (Weeks 13+)</option>
+            </select>
+            {startDate && (
+              <p className="text-xs text-gray-400 mt-1">
+                Auto-detected: Stage {getCurrentPhase(startDate).workoutStage.number} — {getCurrentPhase(startDate).workoutStage.label}
+              </p>
+            )}
           </div>
         </div>
         <button

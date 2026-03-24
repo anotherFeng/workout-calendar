@@ -57,11 +57,11 @@ export default function Calendar({ year, month, onPrev, onNext, onDayClick, getD
                 {dayNum}
               </span>
 
-              {/* 3 check indicators */}
+              {/* Category indicators */}
               <div className="flex gap-1 mt-auto">
-                <CheckDot value={status.workout} max={5} title="Workout" color="green" />
-                <CheckDot value={status.meal} max={5} title="Meal" color="blue" />
-                <CheckDot value={status.vitamins} max={1} title="Vitamins" color="purple" />
+                <CheckIcon value={status.workout} max={5} title="Workout" category="workout" />
+                <CheckIcon value={status.meal} max={5} title="Meal" category="meal" />
+                <CheckIcon value={status.vitamins} max={1} title="Vitamins" category="vitamins" />
               </div>
             </button>
           );
@@ -70,54 +70,57 @@ export default function Calendar({ year, month, onPrev, onNext, onDayClick, getD
 
       {/* Legend */}
       <div className="flex justify-center gap-4 mt-3 text-xs text-gray-500">
-        <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-green-500 inline-block"></span> Workout (✓=5★)</span>
-        <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-blue-500 inline-block"></span> Meal (✓=5★)</span>
-        <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-purple-500 inline-block"></span> Vitamins (✓=all)</span>
+        <span className="flex items-center gap-1"><span className="text-sm">💪</span> Workout</span>
+        <span className="flex items-center gap-1"><span className="text-sm">🍽️</span> Meal</span>
+        <span className="flex items-center gap-1"><span className="text-sm">💊</span> Vitamins</span>
       </div>
     </div>
   );
 }
 
-function CheckDot({ value, max, title, color }) {
+function CheckIcon({ value, max, title, category }) {
+  const icons = {
+    workout: '💪',
+    meal: '🍽️',
+    vitamins: '💊',
+  };
+  const icon = icons[category] || '●';
+
   if (value <= 0) {
     return (
       <span
         title={title}
-        className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-gray-200 transition-colors"
-      />
+        className="text-[10px] sm:text-xs opacity-20 grayscale transition-opacity"
+      >
+        {icon}
+      </span>
     );
   }
 
   const ratio = Math.min(value / max, 1);
   const isFull = ratio >= 1;
 
-  const colorMap = {
-    green: 'bg-green-500',
-    blue: 'bg-blue-500',
-    purple: 'bg-purple-500',
-  };
-
   if (isFull) {
     return (
       <span
         title={`${title} ✓`}
-        className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full ${colorMap[color]} flex items-center justify-center`}
+        className="text-[10px] sm:text-xs transition-opacity"
       >
-        <svg className="w-2 h-2 sm:w-2.5 sm:h-2.5 text-white" viewBox="0 0 12 12" fill="none">
-          <path d="M2.5 6L5 8.5L9.5 3.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
+        {icon}
       </span>
     );
   }
 
-  // Partial: colored circle with opacity based on progress (0.25 to 0.85)
-  const opacity = 0.25 + ratio * 0.6;
+  // Partial: dim based on progress
+  const opacity = 0.3 + ratio * 0.5;
 
   return (
     <span
       title={`${title}: ${max <= 1 ? Math.round(ratio * 100) + '%' : value + '/' + max}`}
-      className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full ${colorMap[color]} transition-colors`}
+      className="text-[10px] sm:text-xs transition-opacity"
       style={{ opacity }}
-    />
+    >
+      {icon}
+    </span>
   );
 }

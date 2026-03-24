@@ -28,27 +28,48 @@ export function getCurrentPhase(startDate) {
 export function getSessionOptions(workoutStage) {
   if (workoutStage <= 1) {
     return [
-      'Day A — Push + Row',
-      'Day B — Pull + Row',
-      'Day C — Legs + Core + Row',
-      'Rest Day',
+      { group: 'Day A — Push + Row', options: [
+        'Day A — Push + Row (Primary)',
+        'Day A — Push + Row (Incline Focus)',
+        'Day A — Push + Row (Decline + Tricep)',
+      ]},
+      { group: 'Day B — Pull + Row', options: [
+        'Day B — Pull + Row (Primary)',
+        'Day B — Pull + Row (Rear Delt + Upper Back)',
+        'Day B — Pull + Row (Bicep + Core Pull)',
+      ]},
+      { group: 'Day C — Legs + Row', options: [
+        'Day C — Legs + Row (Primary)',
+        'Day C — Legs + Row (Glute + Posterior Chain)',
+        'Day C — Legs + Row (Unilateral)',
+      ]},
+      { group: 'Day D — Core + Mobility + Row', options: [
+        'Day D — Core + Mobility + Row (Primary)',
+        'Day D — Core + Mobility + Row (Anti-Rotation + Oblique)',
+        'Day D — Core + Mobility + Row (Mobility + Recovery)',
+      ]},
+      { group: 'Other', options: ['Rest Day'] },
     ];
   }
   if (workoutStage <= 2) {
     return [
-      'Day A — Push Heavy',
-      'Day B — Pull Heavy',
-      'Day C — Legs Heavy',
-      'Day D — Rowing Intervals',
-      'Rest Day',
+      { group: null, options: [
+        'Day A — Push Heavy',
+        'Day B — Pull Heavy',
+        'Day C — Legs Heavy',
+        'Day D — Rowing Intervals',
+        'Rest Day',
+      ]},
     ];
   }
   return [
-    'Day A — Upper Compound',
-    'Day B — Lower + Core',
-    'Day C — Push Circuit',
-    'Day D — Pull Circuit',
-    'Day E — Rowing Long Intervals',
-    'Rest Day',
+    { group: null, options: [
+      'Day A — Upper Compound',
+      'Day B — Lower + Core',
+      'Day C — Push Circuit',
+      'Day D — Pull Circuit',
+      'Day E — Rowing Long Intervals',
+      'Rest Day',
+    ]},
   ];
 }
